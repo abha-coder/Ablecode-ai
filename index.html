@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Able Code AI</title>
+  <meta
+    name="description"
+    content="Able Code AI - an accessible AI coding assistant designed to help everyone learn, create, and code."
+  >
+  <meta name="theme-color" content="#0b57d0">
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+    header {
+      background: #0b57d0;
+      color: white;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+    header p {
+      margin: 8px 0 0;
+      font-size: 17px;
+    }
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      border: 2px solid #9ca3af;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 16px;
+      resize: vertical;
+    }
+    textarea:focus {
+      outline: 3px solid #93c5fd;
+      border-color: #0b57d0;
+    }
+    button {
+      margin-top: 14px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #0b57d0;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #084298;
+    }
+    button:focus {
+      outline: 3px solid #111827;
+      outline-offset: 3px;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #111827;
+      color: #f9fafb;
+      padding: 16px;
+      border-radius: 10px;
+      min-height: 100px;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      color: #4b5563;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Able Code AI</h1>
+    <p>Accessible AI-powered coding assistance</p>
+  </header>
+  <main>
+    <section class="card" aria-labelledby="about-heading">
+      <h2 id="about-heading">Welcome to Able Code AI</h2>
+      <p>
+        Able Code AI is designed to make coding more accessible,
+        understandable, and easier to use.
+      </p>
+      <p>
+        Enter your code or describe what you want to build below.
+      </p>
+    </section>
+    <section class="card" aria-labelledby="code-heading">
+      <h2 id="code-heading">Code Assistant</h2>
+      <label for="codeInput">
+        Enter your code or coding question
+      </label>
+      <textarea
+        id="codeInput"
+        placeholder="Example: Explain this JavaScript code..."
+        aria-describedby="input-help"
+      ></textarea>
+      <p id="input-help">
+        You can enter a coding question, paste code, or describe a problem.
+      </p>
+      <button type="button" id="analyzeButton">
+        Analyze Code
+      </button>
+    </section>
+    <section class="card" aria-labelledby="result-heading">
+      <h2 id="result-heading">Result</h2>
+      <div
+        id="output"
+        role="status"
+        aria-live="polite"
+        tabindex="0"
+      >
+        Your result will appear here.
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>© 2026 Able Code AI</p>
+  </footer>
+  <script>
+    const input = document.getElementById("codeInput");
+    const button = document.getElementById("analyzeButton");
+    const output = document.getElementById("output");
+    button.addEventListener("click", function () {
+      const text = input.value.trim();
+      if (!text) {
+        output.textContent =
+          "Please enter some code or a coding question first.";
+        output.focus();
+        return;
+      }
+      output.textContent =
+        "Your code/question has been received.\n\n" +
+        "AI analysis will be connected here.";
+      output.focus();
+    });
+  </script>
+</body>
+</html>
