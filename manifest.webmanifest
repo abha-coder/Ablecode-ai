@@ -1,0 +1,11 @@
+{
+  "name": "Able Code AI",
+  "short_name": "Able Code AI",
+  "description": "An accessible AI-powered coding assistant.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0b57d0",
+  "orientation": "portrait-primary",
+  "icons": []
+}
