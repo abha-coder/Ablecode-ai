@@ -3,94 +3,1163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Able Code AI</title>
-  <meta
-    name="description"
-    content="Able Code AI - an accessible AI coding assistant designed to help everyone learn, create, and code."
-  >
-  <meta name="theme-color" content="#0b57d0">
-  <link rel="manifest" href="manifest.webmanifest">
-</head>
-<body>
-  <header>
-    <h1>Able Code AI</h1>
-    <p>Accessible AI-powered coding assistance</p>
-  </header>
-  <main>
-    <section>
-      <h2>Welcome to Able Code AI</h2>
-      <p>
-        Able Code AI is designed to make coding more accessible,
-        understandable, and easier to use.
-      </p>
-      <p>
-        Enter your code or describe what you want to build below.
-      </p>
-    </section>
-    <section>
-      <h2>Code Assistant</h2>
-      <label for="codeInput">
-        Enter your code or coding question
-      </label>
-      <br><br>
-      <textarea
-        id="codeInput"
-        rows="10"
-        cols="50"
-        placeholder="Example: Explain this JavaScript code..."
-      ></textarea>
-      <br>
-      <button type="button" id="analyzeButton">
-        Analyze Code
-      </button>
-    </section>
-    <section>
-      <h2>Result</h2>
-      <div
-        id="output"
-        role="status"
-        aria-live="polite"
-        tabindex="0"
-      >
-        Your result will appear here.
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>© 2026 Able Code AI</p>
-  </footer>
-  <script>
-    const input = document.getElementById("codeInput");
-    const button = document.getElementById("analyzeButton");
-    const output = document.getElementById("output");
-    button.addEventListener("click", function () {
-      const text = input.value.trim();
-      if (!text) {
-        output.textContent =
-          "Please enter some code or a coding question first.";
-        output.focus();
-        return;
-      }
-      output.textContent =
-        "Your code/question has been received.\n\n" +
-        "AI analysis will be connected here.";
-      output.focus();
-    });
-    // Register the service worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js")
-          .then(() => {
-            console.log("Service worker registered successfully.");
-          })
-          .catch((error) => {
-            console.error(
-              "Service worker registration failed:",
-              error
-            );
-          });
-      });
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="AbleCode AI - Create accessible software with AI.">
+  <title>AbleCode AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
     }
-  </script>
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: #ffffff;
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 20px;
+      background: #111827;
+      border-bottom: 1px solid #374151;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: #cbd5e1;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px;
+      background: #111827;
+    }
+
+    nav button {
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 2px solid #64748b;
+      border-radius: 10px;
+      background: #1e293b;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    nav button[aria-current="page"] {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    button:focus-visible,
+    textarea:focus-visible,
+    input:focus-visible {
+      outline: 4px solid #facc15;
+      outline-offset: 3px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    section {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    section[hidden] {
+      display: none;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 300px;
+      padding: 15px;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      background: #020617;
+      color: #ffffff;
+      font-family: monospace;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    #idea {
+      min-height: 180px;
+      font-family: inherit;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .action {
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 2px solid #64748b;
+      border-radius: 10px;
+      background: #1e293b;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .status {
+      min-height: 30px;
+      margin-top: 15px;
+      color: #cbd5e1;
+    }
+
+    .preview {
+      width: 100%;
+      min-height: 300px;
+      margin-top: 20px;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      background: white;
+    }
+
+    .message {
+      padding: 15px;
+      border-bottom: 1px solid #374151;
+    }
+
+    .message strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .success {
+      color: #86efac;
+    }
+
+    .error {
+      color: #fca5a5;
+    }
+
+    footer {
+      padding: 20px;
+      text-align: center;
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 12px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      nav {
+        flex-direction: column;
+      }
+
+      nav button {
+        width: 100%;
+        text-align: left;
+      }
+
+      .action {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>AbleCode AI</h1>
+  <p>Write accessible software with AI assistance.</p>
+</header>
+
+<nav aria-label="Main navigation">
+  <button
+    type="button"
+    data-view="code"
+    aria-current="page">
+    Code View
+  </button>
+
+  <button
+    type="button"
+    data-view="ai"
+    aria-current="false">
+    AI View
+  </button>
+
+  <button
+    type="button"
+    data-view="debug"
+    aria-current="false">
+    Debugger
+  </button>
+</nav>
+
+<main>
+
+  <!-- CODE VIEW -->
+  <section
+    id="code-view"
+    aria-labelledby="code-title">
+
+    <h2 id="code-title" tabindex="-1">
+      Code View
+    </h2>
+
+    <p>
+      Write and edit your accessible HTML code.
+    </p>
+
+    <label for="code">
+      <strong>Code editor</strong>
+    </label>
+
+    <textarea
+      id="code"
+      spellcheck="false"
+      aria-describedby="code-help"></textarea>
+
+    <p id="code-help">
+      Use Run Preview to test your code.
+    </p>
+
+    <div class="toolbar">
+
+      <button
+        class="action"
+        type="button"
+        id="save-code">
+        Save Code
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="run-code">
+        Run Preview
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="copy-code">
+        Copy Code
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="download-code">
+        Download Code
+      </button>
+
+    </div>
+
+    <p
+      id="code-status"
+      class="status"
+      role="status"
+      aria-live="polite"></p>
+
+    <h3>Live Preview</h3>
+
+    <iframe
+      id="preview"
+      class="preview"
+      title="Live preview of your application">
+    </iframe>
+
+  </section>
+
+
+  <!-- AI VIEW -->
+  <section
+    id="ai-view"
+    aria-labelledby="ai-title"
+    hidden>
+
+    <h2 id="ai-title" tabindex="-1">
+      AI View
+    </h2>
+
+    <p>
+      Describe what you want to build. AbleCode AI will create an accessible starting point.
+    </p>
+
+    <label for="idea">
+      <strong>Software idea</strong>
+    </label>
+
+    <textarea
+      id="idea"
+      placeholder="Example: Create an accessible login form with email, password and a submit button."></textarea>
+
+    <div class="toolbar">
+
+      <button
+        class="action"
+        type="button"
+        id="start-dictation"
+        aria-pressed="false">
+        Start Dictation
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="stop-dictation"
+        disabled>
+        Stop Dictation
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="generate">
+        Generate Accessible Code
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="explain">
+        Explain Accessibility
+      </button>
+
+    </div>
+
+    <p
+      id="voice-status"
+      class="status"
+      role="status"
+      aria-live="polite"></p>
+
+    <div
+      id="ai-messages"
+      aria-live="polite">
+    </div>
+
+  </section>
+
+
+  <!-- DEBUGGER -->
+  <section
+    id="debug-view"
+    aria-labelledby="debug-title"
+    hidden>
+
+    <h2 id="debug-title" tabindex="-1">
+      Debugger
+    </h2>
+
+    <p>
+      Run your code and check for problems.
+    </p>
+
+    <div class="toolbar">
+
+      <button
+        class="action"
+        type="button"
+        id="debug-run">
+        Run Debugger
+      </button>
+
+      <button
+        class="action"
+        type="button"
+        id="clear-debug">
+        Clear Results
+      </button>
+
+    </div>
+
+    <div
+      id="debug-output"
+      class="status"
+      role="region"
+      aria-live="polite"
+      aria-label="Debugger results">
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  AbleCode AI MVP
+</footer>
+
+
+<script>
+"use strict";
+
+/* -----------------------------
+   STARTER ACCESSIBLE CODE
+----------------------------- */
+
+const starterCode = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Accessible App</title>
+</head>
+
+<body>
+
+  <main>
+    <h1>My Accessible App</h1>
+
+    <p>
+      Welcome to my accessible application.
+    </p>
+
+    <button type="button" id="hello">
+      Say Hello
+    </button>
+
+    <p
+      id="message"
+      role="status"
+      aria-live="polite">
+    </p>
+  </main>
+
+  <script>
+    document
+      .getElementById("hello")
+      .addEventListener("click", function () {
+
+        document
+          .getElementById("message")
+          .textContent =
+          "Hello from AbleCode AI!";
+
+      });
+  <\/script>
+
+</body>
+</html>`;
+
+
+/* -----------------------------
+   ELEMENTS
+----------------------------- */
+
+const code =
+  document.getElementById("code");
+
+const preview =
+  document.getElementById("preview");
+
+const idea =
+  document.getElementById("idea");
+
+const codeStatus =
+  document.getElementById("code-status");
+
+const voiceStatus =
+  document.getElementById("voice-status");
+
+const debugOutput =
+  document.getElementById("debug-output");
+
+const aiMessages =
+  document.getElementById("ai-messages");
+
+
+/* -----------------------------
+   VIEW NAVIGATION
+----------------------------- */
+
+const views = {
+  code: document.getElementById("code-view"),
+  ai: document.getElementById("ai-view"),
+  debug: document.getElementById("debug-view")
+};
+
+const navButtons =
+  document.querySelectorAll(
+    "nav button[data-view]"
+  );
+
+
+function showView(name) {
+
+  Object.keys(views).forEach(function(view) {
+    views[view].hidden =
+      view !== name;
+  });
+
+  navButtons.forEach(function(button) {
+
+    const active =
+      button.dataset.view === name;
+
+    button.setAttribute(
+      "aria-current",
+      active ? "page" : "false"
+    );
+
+  });
+
+  const heading =
+    document.getElementById(
+      name + "-title"
+    );
+
+  if (heading) {
+    heading.focus();
+  }
+
+}
+
+
+navButtons.forEach(function(button) {
+
+  button.addEventListener(
+    "click",
+    function() {
+
+      showView(
+        button.dataset.view
+      );
+
+    }
+  );
+
+});
+
+
+/* -----------------------------
+   CODE EDITOR
+----------------------------- */
+
+code.value = starterCode;
+
+
+document
+  .getElementById("save-code")
+  .addEventListener(
+    "click",
+    function() {
+
+      localStorage.setItem(
+        "ablecode-code",
+        code.value
+      );
+
+      codeStatus.textContent =
+        "Code saved.";
+
+    }
+  );
+
+
+const savedCode =
+  localStorage.getItem(
+    "ablecode-code"
+  );
+
+if (savedCode) {
+  code.value = savedCode;
+}
+
+
+/* -----------------------------
+   RUN PREVIEW
+----------------------------- */
+
+function runPreview() {
+
+  try {
+
+    preview.srcdoc =
+      code.value;
+
+    codeStatus.textContent =
+      "Preview updated successfully.";
+
+  } catch (error) {
+
+    codeStatus.textContent =
+      "Preview error: " +
+      error.message;
+
+  }
+
+}
+
+
+document
+  .getElementById("run-code")
+  .addEventListener(
+    "click",
+    runPreview
+  );
+
+
+/* -----------------------------
+   COPY CODE
+----------------------------- */
+
+document
+  .getElementById("copy-code")
+  .addEventListener(
+    "click",
+    async function() {
+
+      try {
+
+        await navigator.clipboard.writeText(
+          code.value
+        );
+
+        codeStatus.textContent =
+          "Code copied to clipboard.";
+
+      } catch (error) {
+
+        codeStatus.textContent =
+          "Unable to copy automatically.";
+
+      }
+
+    }
+  );
+
+
+/* -----------------------------
+   DOWNLOAD CODE
+----------------------------- */
+
+document
+  .getElementById("download-code")
+  .addEventListener(
+    "click",
+    function() {
+
+      const blob =
+        new Blob(
+          [code.value],
+          { type: "text/html" }
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const link =
+        document.createElement("a");
+
+      link.href = url;
+      link.download = "accessible-app.html";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+
+      URL.revokeObjectURL(url);
+
+      codeStatus.textContent =
+        "Code download created.";
+
+    }
+  );
+
+
+/* -----------------------------
+   AI MESSAGE
+----------------------------- */
+
+function addAIMessage(
+  title,
+  text
+) {
+
+  const message =
+    document.createElement("div");
+
+  message.className =
+    "message";
+
+  const heading =
+    document.createElement("strong");
+
+  heading.textContent =
+    title;
+
+  const content =
+    document.createElement("p");
+
+  content.textContent =
+    text;
+
+  message.appendChild(heading);
+  message.appendChild(content);
+
+  aiMessages.appendChild(message);
+
+}
+
+
+/* -----------------------------
+   LOCAL AI CODE GENERATOR
+----------------------------- */
+
+function generateAccessibleCode(
+  request
+) {
+
+  const clean =
+    request
+      .replace(/[<>]/g, "")
+      .trim();
+
+  return `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Accessible Application</title>
+
+</head>
+
+<body>
+
+  <main>
+
+    <h1>Accessible Application</h1>
+
+    <p>
+      ${clean}
+    </p>
+
+    <form>
+
+      <label for="name">
+        Name
+      </label>
+
+      <input
+        id="name"
+        name="name"
+        type="text"
+        autocomplete="name">
+
+      <button type="submit">
+        Submit
+      </button>
+
+      <p
+        role="status"
+        aria-live="polite">
+      </p>
+
+    </form>
+
+  </main>
+
+</body>
+
+</html>`;
+
+}
+
+
+document
+  .getElementById("generate")
+  .addEventListener(
+    "click",
+    function() {
+
+      const request =
+        idea.value.trim();
+
+      if (!request) {
+
+        voiceStatus.textContent =
+          "Please describe your software idea first.";
+
+        idea.focus();
+
+        return;
+
+      }
+
+      code.value =
+        generateAccessibleCode(
+          request
+        );
+
+      localStorage.setItem(
+        "ablecode-code",
+        code.value
+      );
+
+      runPreview();
+
+      addAIMessage(
+        "AbleCode AI",
+        "Accessible starter code has been generated. You can edit it in Code View."
+      );
+
+      voiceStatus.textContent =
+        "Accessible code generated.";
+
+    }
+  );
+
+
+/* -----------------------------
+   EXPLAIN ACCESSIBILITY
+----------------------------- */
+
+document
+  .getElementById("explain")
+  .addEventListener(
+    "click",
+    function() {
+
+      addAIMessage(
+        "Accessibility explanation",
+        "The generated code uses semantic HTML, a language declaration, a viewport setting, labels for form controls, keyboard-operable buttons, and a live status region."
+      );
+
+    }
+  );
+
+
+/* -----------------------------
+   DICTATION
+----------------------------- */
+
+let recognition = null;
+let isDictating = false;
+
+
+function setupSpeechRecognition() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+
+    document
+      .getElementById("start-dictation")
+      .disabled = true;
+
+    voiceStatus.textContent =
+      "Browser speech recognition is unavailable. Use Safari keyboard Dictation.";
+
+    return;
+
+  }
+
+  recognition =
+    new SpeechRecognition();
+
+  recognition.lang =
+    "en-US";
+
+  recognition.continuous =
+    true;
+
+  recognition.interimResults =
+    true;
+
+
+  recognition.onstart =
+    function() {
+
+      isDictating = true;
+
+      document
+        .getElementById("start-dictation")
+        .setAttribute(
+          "aria-pressed",
+          "true"
+        );
+
+      document
+        .getElementById("start-dictation")
+        .textContent =
+        "Dictation Running";
+
+      document
+        .getElementById("stop-dictation")
+        .disabled = false;
+
+      voiceStatus.textContent =
+        "Dictation started. Speak your software idea.";
+
+    };
+
+
+  recognition.onresult =
+    function(event) {
+
+      let finalText = "";
+
+      let interimText = "";
+
+      for (
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ) {
+
+        const transcript =
+          event.results[i][0]
+            .transcript;
+
+        if (
+          event.results[i].isFinal
+        ) {
+
+          finalText +=
+            transcript;
+
+        } else {
+
+          interimText +=
+            transcript;
+
+        }
+
+      }
+
+
+      if (finalText) {
+
+        const existing =
+          idea.value.trim();
+
+        idea.value =
+          existing
+            ? existing + " " + finalText
+            : finalText;
+
+      }
+
+
+      voiceStatus.textContent =
+        interimText
+          ? "Listening: " + interimText
+          : "Dictation received.";
+
+    };
+
+
+  recognition.onerror =
+    function(event) {
+
+      voiceStatus.textContent =
+        "Dictation error: " +
+        event.error;
+
+      stopDictation();
+
+    };
+
+
+  recognition.onend =
+    function() {
+
+      if (isDictating) {
+        stopDictation();
+      }
+
+    };
+
+}
+
+
+function stopDictation() {
+
+  isDictating = false;
+
+  if (recognition) {
+
+    try {
+      recognition.stop();
+    } catch (error) {
+    }
+
+  }
+
+  document
+    .getElementById("start-dictation")
+    .setAttribute(
+      "aria-pressed",
+      "false"
+    );
+
+  document
+    .getElementById("start-dictation")
+    .textContent =
+    "Start Dictation";
+
+  document
+    .getElementById("stop-dictation")
+    .disabled = true;
+
+  voiceStatus.textContent =
+    "Dictation stopped.";
+
+}
+
+
+document
+  .getElementById("start-dictation")
+  .addEventListener(
+    "click",
+    function() {
+
+      if (!recognition) {
+        setupSpeechRecognition();
+      }
+
+      if (
+        recognition &&
+        !isDictating
+      ) {
+
+        try {
+          recognition.start();
+        } catch (error) {
+
+          voiceStatus.textContent =
+            "Unable to start dictation. Use Safari keyboard Dictation.";
+
+        }
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById("stop-dictation")
+  .addEventListener(
+    "click",
+    stopDictation
+  );
+
+
+setupSpeechRecognition();
+
+
+/* -----------------------------
+   DEBUGGER
+----------------------------- */
+
+document
+  .getElementById("debug-run")
+  .addEventListener(
+    "click",
+    function() {
+
+      debugOutput.innerHTML = "";
+
+      try {
+
+        new DOMParser()
+          .parseFromString(
+            code.value,
+            "text/html"
+          );
+
+        runPreview();
+
+        const success =
+          document.createElement("p");
+
+        success.className =
+          "success";
+
+        success.textContent =
+          "The code was loaded into the preview successfully. No HTML parsing error was detected.";
+
+        debugOutput.appendChild(
+          success
+        );
+
+      } catch (error) {
+
+        const failure =
+          document.createElement("p");
+
+        failure.className =
+          "error";
+
+        failure.textContent =
+          "Debugger error: " +
+          error.message;
+
+        debugOutput.appendChild(
+          failure
+        );
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById("clear-debug")
+  .addEventListener(
+    "click",
+    function() {
+
+      debugOutput.innerHTML = "";
+
+    }
+  );
+
+
+/* -----------------------------
+   INITIAL PREVIEW
+----------------------------- */
+
+runPreview();
+
+</script>
+
 </body>
 </html>
