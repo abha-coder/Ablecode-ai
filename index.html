@@ -67,6 +67,11 @@
       outline-offset: 3px;
     }
 
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     main {
       max-width: 1100px;
       margin: auto;
@@ -125,6 +130,10 @@
       font-size: 16px;
     }
 
+    .action:hover:not(:disabled) {
+      background: #334155;
+    }
+
     .status {
       min-height: 30px;
       margin-top: 15px;
@@ -143,11 +152,21 @@
     .message {
       padding: 15px;
       border-bottom: 1px solid #374151;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #0f172a;
     }
 
     .message strong {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      color: #60a5fa;
+    }
+
+    .message p {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
     .success {
@@ -156,6 +175,25 @@
 
     .error {
       color: #fca5a5;
+    }
+
+    .loading {
+      color: #fbbf24;
+      font-style: italic;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #64748b;
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     footer {
@@ -307,7 +345,7 @@
     </h2>
 
     <p>
-      Describe what you want to build. AbleCode AI will create an accessible starting point.
+      Describe what you want to build. AbleCode AI will create an accessible starting point using ChatGPT.
     </p>
 
     <label for="idea">
@@ -340,14 +378,14 @@
         class="action"
         type="button"
         id="generate">
-        Generate Accessible Code
+        Generate with ChatGPT
       </button>
 
       <button
         class="action"
         type="button"
         id="explain">
-        Explain Accessibility
+        Explain Code
       </button>
 
     </div>
@@ -360,7 +398,8 @@
 
     <div
       id="ai-messages"
-      aria-live="polite">
+      aria-live="polite"
+      aria-label="AI responses">
     </div>
 
   </section>
@@ -418,9 +457,10 @@
 <script>
 "use strict";
 
-/* -----------------------------
-   STARTER ACCESSIBLE CODE
------------------------------ */
+/* API Configuration */
+const API_BASE_URL = "";  // Vercel functions use relative paths
+
+/* STARTER ACCESSIBLE CODE */
 
 const starterCode = `<!DOCTYPE html>
 <html lang="en">
@@ -467,9 +507,7 @@ const starterCode = `<!DOCTYPE html>
 </html>`;
 
 
-/* -----------------------------
-   ELEMENTS
------------------------------ */
+/* ELEMENTS */
 
 const code =
   document.getElementById("code");
@@ -493,9 +531,7 @@ const aiMessages =
   document.getElementById("ai-messages");
 
 
-/* -----------------------------
-   VIEW NAVIGATION
------------------------------ */
+/* VIEW NAVIGATION */
 
 const views = {
   code: document.getElementById("code-view"),
@@ -556,9 +592,7 @@ navButtons.forEach(function(button) {
 });
 
 
-/* -----------------------------
-   CODE EDITOR
------------------------------ */
+/* CODE EDITOR */
 
 code.value = starterCode;
 
@@ -591,9 +625,7 @@ if (savedCode) {
 }
 
 
-/* -----------------------------
-   RUN PREVIEW
------------------------------ */
+/* RUN PREVIEW */
 
 function runPreview() {
 
@@ -624,9 +656,7 @@ document
   );
 
 
-/* -----------------------------
-   COPY CODE
------------------------------ */
+/* COPY CODE */
 
 document
   .getElementById("copy-code")
@@ -654,9 +684,7 @@ document
   );
 
 
-/* -----------------------------
-   DOWNLOAD CODE
------------------------------ */
+/* DOWNLOAD CODE */
 
 document
   .getElementById("download-code")
@@ -694,13 +722,12 @@ document
   );
 
 
-/* -----------------------------
-   AI MESSAGE
------------------------------ */
+/* AI MESSAGE */
 
 function addAIMessage(
   title,
-  text
+  text,
+  isLoading = false
 ) {
 
   const message =
@@ -718,83 +745,118 @@ function addAIMessage(
   const content =
     document.createElement("p");
 
-  content.textContent =
-    text;
+  if (isLoading) {
+    content.innerHTML =
+      '<span class="spinner"></span> ' +
+      text;
+  } else {
+    content.textContent = text;
+  }
 
   message.appendChild(heading);
   message.appendChild(content);
 
   aiMessages.appendChild(message);
+  
+  // Scroll to bottom
+  aiMessages.scrollTop = aiMessages.scrollHeight;
+
+  return message;
 
 }
 
 
-/* -----------------------------
-   LOCAL AI CODE GENERATOR
------------------------------ */
+/* CHATGPT CODE GENERATION */
 
-function generateAccessibleCode(
+async function generateWithChatGPT(
   request
 ) {
 
-  const clean =
-    request
-      .replace(/[<>]/g, "")
-      .trim();
+  const request_idea = idea.value.trim();
 
-  return `<!DOCTYPE html>
-<html lang="en">
+  if (!request_idea) {
 
-<head>
+    voiceStatus.textContent =
+      "Please describe your software idea first.";
 
-  <meta charset="UTF-8">
+    idea.focus();
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+    return;
 
-  <title>Accessible Application</title>
+  }
 
-</head>
+  const generateBtn = 
+    document.getElementById("generate");
+  generateBtn.disabled = true;
 
-<body>
+  const messageEl = addAIMessage(
+    "AbleCode AI",
+    "Generating accessible code with ChatGPT...",
+    true
+  );
 
-  <main>
+  try {
 
-    <h1>Accessible Application</h1>
+    const response = await fetch(
+      API_BASE_URL + "/api/generate-code",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          idea: request_idea
+        })
+      }
+    );
 
-    <p>
-      ${clean}
-    </p>
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.error || 
+        "Failed to generate code"
+      );
+    }
 
-    <form>
+    const data = 
+      await response.json();
 
-      <label for="name">
-        Name
-      </label>
+    code.value = data.code;
 
-      <input
-        id="name"
-        name="name"
-        type="text"
-        autocomplete="name">
+    localStorage.setItem(
+      "ablecode-code",
+      code.value
+    );
 
-      <button type="submit">
-        Submit
-      </button>
+    runPreview();
 
-      <p
-        role="status"
-        aria-live="polite">
-      </p>
+    messageEl.remove();
 
-    </form>
+    addAIMessage(
+      "AbleCode AI",
+      "✓ Accessible code generated successfully! You can edit it in Code View."
+    );
 
-  </main>
+    voiceStatus.textContent =
+      "Code generated from ChatGPT.";
 
-</body>
+  } catch (error) {
 
-</html>`;
+    messageEl.remove();
+
+    addAIMessage(
+      "Error",
+      error.message
+    );
+
+    voiceStatus.textContent =
+      "Error: " + error.message;
+
+  } finally {
+
+    generateBtn.disabled = false;
+
+  }
 
 }
 
@@ -803,68 +865,104 @@ document
   .getElementById("generate")
   .addEventListener(
     "click",
-    function() {
-
-      const request =
-        idea.value.trim();
-
-      if (!request) {
-
-        voiceStatus.textContent =
-          "Please describe your software idea first.";
-
-        idea.focus();
-
-        return;
-
-      }
-
-      code.value =
-        generateAccessibleCode(
-          request
-        );
-
-      localStorage.setItem(
-        "ablecode-code",
-        code.value
-      );
-
-      runPreview();
-
-      addAIMessage(
-        "AbleCode AI",
-        "Accessible starter code has been generated. You can edit it in Code View."
-      );
-
-      voiceStatus.textContent =
-        "Accessible code generated.";
-
-    }
+    generateWithChatGPT
   );
 
 
-/* -----------------------------
-   EXPLAIN ACCESSIBILITY
------------------------------ */
+/* EXPLAIN CODE WITH CHATGPT */
+
+async function explainCode() {
+
+  const codeToExplain = code.value.trim();
+
+  if (!codeToExplain) {
+
+    voiceStatus.textContent =
+      "Please write or generate code first.";
+
+    showView("code");
+    code.focus();
+
+    return;
+
+  }
+
+  const explainBtn = 
+    document.getElementById("explain");
+  explainBtn.disabled = true;
+
+  const messageEl = addAIMessage(
+    "AbleCode AI",
+    "Analyzing code and accessibility features...",
+    true
+  );
+
+  try {
+
+    const response = await fetch(
+      API_BASE_URL + "/api/explain-code",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          code: codeToExplain
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.error || 
+        "Failed to explain code"
+      );
+    }
+
+    const data = 
+      await response.json();
+
+    messageEl.remove();
+
+    addAIMessage(
+      "Code Explanation",
+      data.explanation
+    );
+
+    voiceStatus.textContent =
+      "Code explanation generated.";
+
+  } catch (error) {
+
+    messageEl.remove();
+
+    addAIMessage(
+      "Error",
+      error.message
+    );
+
+    voiceStatus.textContent =
+      "Error: " + error.message;
+
+  } finally {
+
+    explainBtn.disabled = false;
+
+  }
+
+}
+
 
 document
   .getElementById("explain")
   .addEventListener(
     "click",
-    function() {
-
-      addAIMessage(
-        "Accessibility explanation",
-        "The generated code uses semantic HTML, a language declaration, a viewport setting, labels for form controls, keyboard-operable buttons, and a live status region."
-      );
-
-    }
+    explainCode
   );
 
 
-/* -----------------------------
-   DICTATION
------------------------------ */
+/* DICTATION */
 
 let recognition = null;
 let isDictating = false;
@@ -999,9 +1097,23 @@ function setupSpeechRecognition() {
   recognition.onend =
     function() {
 
-      if (isDictating) {
-        stopDictation();
-      }
+      isDictating = false;
+
+      document
+        .getElementById("start-dictation")
+        .setAttribute(
+          "aria-pressed",
+          "false"
+        );
+
+      document
+        .getElementById("start-dictation")
+        .textContent =
+        "Start Dictation";
+
+      document
+        .getElementById("stop-dictation")
+        .disabled = true;
 
     };
 
@@ -1010,35 +1122,9 @@ function setupSpeechRecognition() {
 
 function stopDictation() {
 
-  isDictating = false;
-
   if (recognition) {
-
-    try {
-      recognition.stop();
-    } catch (error) {
-    }
-
+    recognition.stop();
   }
-
-  document
-    .getElementById("start-dictation")
-    .setAttribute(
-      "aria-pressed",
-      "false"
-    );
-
-  document
-    .getElementById("start-dictation")
-    .textContent =
-    "Start Dictation";
-
-  document
-    .getElementById("stop-dictation")
-    .disabled = true;
-
-  voiceStatus.textContent =
-    "Dictation stopped.";
 
 }
 
@@ -1049,24 +1135,9 @@ document
     "click",
     function() {
 
-      if (!recognition) {
+      if (!isDictating) {
         setupSpeechRecognition();
-      }
-
-      if (
-        recognition &&
-        !isDictating
-      ) {
-
-        try {
-          recognition.start();
-        } catch (error) {
-
-          voiceStatus.textContent =
-            "Unable to start dictation. Use Safari keyboard Dictation.";
-
-        }
-
+        recognition.start();
       }
 
     }
@@ -1081,12 +1152,7 @@ document
   );
 
 
-setupSpeechRecognition();
-
-
-/* -----------------------------
-   DEBUGGER
------------------------------ */
+/* DEBUGGER */
 
 document
   .getElementById("debug-run")
@@ -1094,46 +1160,65 @@ document
     "click",
     function() {
 
-      debugOutput.innerHTML = "";
+      const codeToDebug = code.value;
 
       try {
 
-        new DOMParser()
-          .parseFromString(
-            code.value,
-            "text/html"
+        const errors = [];
+
+        // Basic accessibility checks
+        if (!codeToDebug.includes("lang=")) {
+          errors.push(
+            "⚠ Missing language attribute on <html> tag"
           );
+        }
 
-        runPreview();
+        if (!codeToDebug.includes("<title>")) {
+          errors.push(
+            "⚠ Missing <title> tag"
+          );
+        }
 
-        const success =
-          document.createElement("p");
+        if (!codeToDebug.includes("viewport")) {
+          errors.push(
+            "⚠ Missing viewport meta tag"
+          );
+        }
 
-        success.className =
-          "success";
+        const inputMatches = 
+          codeToDebug.match(
+            /<input[^>]*>/g
+          ) || [];
 
-        success.textContent =
-          "The code was loaded into the preview successfully. No HTML parsing error was detected.";
+        inputMatches.forEach(function(input) {
+          if (!input.includes("id") && 
+              !input.includes("aria-label")) {
+            errors.push(
+              "⚠ Input without id or aria-label: " + 
+              input.substring(0, 30) + "..."
+            );
+          }
+        });
 
-        debugOutput.appendChild(
-          success
-        );
+        if (errors.length === 0) {
+          debugOutput.innerHTML = 
+            '<p class="success">✓ No accessibility issues detected!</p>';
+        } else {
+          debugOutput.innerHTML = 
+            '<p>Found ' + errors.length + 
+            ' potential issues:</p>' +
+            '<ul>' +
+            errors.map(function(err) {
+              return "<li>" + err + "</li>";
+            }).join("") +
+            '</ul>';
+        }
 
       } catch (error) {
 
-        const failure =
-          document.createElement("p");
-
-        failure.className =
-          "error";
-
-        failure.textContent =
-          "Debugger error: " +
+        debugOutput.textContent =
+          "Debugger error: " + 
           error.message;
-
-        debugOutput.appendChild(
-          failure
-        );
 
       }
 
@@ -1147,17 +1232,10 @@ document
     "click",
     function() {
 
-      debugOutput.innerHTML = "";
+      debugOutput.textContent = "";
 
     }
   );
-
-
-/* -----------------------------
-   INITIAL PREVIEW
------------------------------ */
-
-runPreview();
 
 </script>
 
