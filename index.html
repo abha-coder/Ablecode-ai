@@ -177,25 +177,6 @@
       color: #fca5a5;
     }
 
-    .loading {
-      color: #fbbf24;
-      font-style: italic;
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #64748b;
-      border-top-color: #60a5fa;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
     footer {
       padding: 20px;
       text-align: center;
@@ -259,208 +240,67 @@
 
 <main>
 
-  <!-- CODE VIEW -->
-  <section
-    id="code-view"
-    aria-labelledby="code-title">
+  <section id="code-view" aria-labelledby="code-title">
+    <h2 id="code-title" tabindex="-1">Code View</h2>
 
-    <h2 id="code-title" tabindex="-1">
-      Code View
-    </h2>
+    <p>Write and edit your accessible HTML code.</p>
 
-    <p>
-      Write and edit your accessible HTML code.
-    </p>
+    <label for="code"><strong>Code editor</strong></label>
+    <textarea id="code" spellcheck="false" aria-describedby="code-help"></textarea>
 
-    <label for="code">
-      <strong>Code editor</strong>
-    </label>
-
-    <textarea
-      id="code"
-      spellcheck="false"
-      aria-describedby="code-help"></textarea>
-
-    <p id="code-help">
-      Use Run Preview to test your code.
-    </p>
+    <p id="code-help">Use Run Preview to test your code.</p>
 
     <div class="toolbar">
-
-      <button
-        class="action"
-        type="button"
-        id="save-code">
-        Save Code
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="run-code">
-        Run Preview
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="copy-code">
-        Copy Code
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="download-code">
-        Download Code
-      </button>
-
+      <button class="action" type="button" id="save-code">Save Code</button>
+      <button class="action" type="button" id="run-code">Run Preview</button>
+      <button class="action" type="button" id="copy-code">Copy Code</button>
+      <button class="action" type="button" id="download-code">Download Code</button>
     </div>
 
-    <p
-      id="code-status"
-      class="status"
-      role="status"
-      aria-live="polite"></p>
+    <p id="code-status" class="status" role="status" aria-live="polite"></p>
 
     <h3>Live Preview</h3>
-
-    <iframe
-      id="preview"
-      class="preview"
-      title="Live preview of your application">
-    </iframe>
-
+    <iframe id="preview" class="preview" title="Live preview of your application"></iframe>
   </section>
 
+  <section id="ai-view" aria-labelledby="ai-title" hidden>
+    <h2 id="ai-title" tabindex="-1">AI View</h2>
 
-  <!-- AI VIEW -->
-  <section
-    id="ai-view"
-    aria-labelledby="ai-title"
-    hidden>
+    <p>Describe what you want to build. This version uses local code generation.</p>
 
-    <h2 id="ai-title" tabindex="-1">
-      AI View
-    </h2>
-
-    <p>
-      Describe what you want to build. AbleCode AI will create an accessible starting point using ChatGPT.
-    </p>
-
-    <label for="idea">
-      <strong>Software idea</strong>
-    </label>
-
-    <textarea
-      id="idea"
-      placeholder="Example: Create an accessible login form with email, password and a submit button."></textarea>
+    <label for="idea"><strong>Software idea</strong></label>
+    <textarea id="idea" placeholder="Example: Create an accessible login form with email, password and a submit button."></textarea>
 
     <div class="toolbar">
-
-      <button
-        class="action"
-        type="button"
-        id="start-dictation"
-        aria-pressed="false">
-        Start Dictation
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="stop-dictation"
-        disabled>
-        Stop Dictation
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="generate">
-        Generate with ChatGPT
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="explain">
-        Explain Code
-      </button>
-
+      <button class="action" type="button" id="start-dictation" aria-pressed="false">Start Dictation</button>
+      <button class="action" type="button" id="stop-dictation" disabled>Stop Dictation</button>
+      <button class="action" type="button" id="generate">Generate Accessible Code</button>
+      <button class="action" type="button" id="explain">Explain Accessibility</button>
     </div>
 
-    <p
-      id="voice-status"
-      class="status"
-      role="status"
-      aria-live="polite"></p>
-
-    <div
-      id="ai-messages"
-      aria-live="polite"
-      aria-label="AI responses">
-    </div>
-
+    <p id="voice-status" class="status" role="status" aria-live="polite"></p>
+    <div id="ai-messages" aria-live="polite" aria-label="AI responses"></div>
   </section>
 
+  <section id="debug-view" aria-labelledby="debug-title" hidden>
+    <h2 id="debug-title" tabindex="-1">Debugger</h2>
 
-  <!-- DEBUGGER -->
-  <section
-    id="debug-view"
-    aria-labelledby="debug-title"
-    hidden>
-
-    <h2 id="debug-title" tabindex="-1">
-      Debugger
-    </h2>
-
-    <p>
-      Run your code and check for problems.
-    </p>
+    <p>Run your code and check for problems.</p>
 
     <div class="toolbar">
-
-      <button
-        class="action"
-        type="button"
-        id="debug-run">
-        Run Debugger
-      </button>
-
-      <button
-        class="action"
-        type="button"
-        id="clear-debug">
-        Clear Results
-      </button>
-
+      <button class="action" type="button" id="debug-run">Run Debugger</button>
+      <button class="action" type="button" id="clear-debug">Clear Results</button>
     </div>
 
-    <div
-      id="debug-output"
-      class="status"
-      role="region"
-      aria-live="polite"
-      aria-label="Debugger results">
-    </div>
-
+    <div id="debug-output" class="status" role="region" aria-live="polite" aria-label="Debugger results"></div>
   </section>
 
 </main>
 
-<footer>
-  AbleCode AI MVP
-</footer>
-
+<footer>AbleCode AI MVP</footer>
 
 <script>
 "use strict";
-
-/* API Configuration */
-const API_BASE_URL = "";  // Vercel functions use relative paths
-
-/* STARTER ACCESSIBLE CODE */
 
 const starterCode = `<!DOCTYPE html>
 <html lang="en">
@@ -483,55 +323,25 @@ const starterCode = `<!DOCTYPE html>
       Say Hello
     </button>
 
-    <p
-      id="message"
-      role="status"
-      aria-live="polite">
-    </p>
+    <p id="message" role="status" aria-live="polite"></p>
   </main>
 
   <script>
-    document
-      .getElementById("hello")
-      .addEventListener("click", function () {
-
-        document
-          .getElementById("message")
-          .textContent =
-          "Hello from AbleCode AI!";
-
-      });
+    document.getElementById("hello").addEventListener("click", function () {
+      document.getElementById("message").textContent = "Hello from AbleCode AI!";
+    });
   <\/script>
 
 </body>
 </html>`;
 
-
-/* ELEMENTS */
-
-const code =
-  document.getElementById("code");
-
-const preview =
-  document.getElementById("preview");
-
-const idea =
-  document.getElementById("idea");
-
-const codeStatus =
-  document.getElementById("code-status");
-
-const voiceStatus =
-  document.getElementById("voice-status");
-
-const debugOutput =
-  document.getElementById("debug-output");
-
-const aiMessages =
-  document.getElementById("ai-messages");
-
-
-/* VIEW NAVIGATION */
+const code = document.getElementById("code");
+const preview = document.getElementById("preview");
+const idea = document.getElementById("idea");
+const codeStatus = document.getElementById("code-status");
+const voiceStatus = document.getElementById("voice-status");
+const debugOutput = document.getElementById("debug-output");
+const aiMessages = document.getElementById("ai-messages");
 
 const views = {
   code: document.getElementById("code-view"),
@@ -539,704 +349,230 @@ const views = {
   debug: document.getElementById("debug-view")
 };
 
-const navButtons =
-  document.querySelectorAll(
-    "nav button[data-view]"
-  );
-
+const navButtons = document.querySelectorAll("nav button[data-view]");
 
 function showView(name) {
-
   Object.keys(views).forEach(function(view) {
-    views[view].hidden =
-      view !== name;
+    views[view].hidden = view !== name;
   });
 
   navButtons.forEach(function(button) {
-
-    const active =
-      button.dataset.view === name;
-
-    button.setAttribute(
-      "aria-current",
-      active ? "page" : "false"
-    );
-
+    const active = button.dataset.view === name;
+    button.setAttribute("aria-current", active ? "page" : "false");
   });
 
-  const heading =
-    document.getElementById(
-      name + "-title"
-    );
-
-  if (heading) {
-    heading.focus();
-  }
-
+  const heading = document.getElementById(name + "-title");
+  if (heading) heading.focus();
 }
 
-
 navButtons.forEach(function(button) {
-
-  button.addEventListener(
-    "click",
-    function() {
-
-      showView(
-        button.dataset.view
-      );
-
-    }
-  );
-
+  button.addEventListener("click", function() {
+    showView(button.dataset.view);
+  });
 });
-
-
-/* CODE EDITOR */
 
 code.value = starterCode;
 
+document.getElementById("save-code").addEventListener("click", function() {
+  localStorage.setItem("ablecode-code", code.value);
+  codeStatus.textContent = "Code saved.";
+});
 
-document
-  .getElementById("save-code")
-  .addEventListener(
-    "click",
-    function() {
-
-      localStorage.setItem(
-        "ablecode-code",
-        code.value
-      );
-
-      codeStatus.textContent =
-        "Code saved.";
-
-    }
-  );
-
-
-const savedCode =
-  localStorage.getItem(
-    "ablecode-code"
-  );
-
-if (savedCode) {
-  code.value = savedCode;
-}
-
-
-/* RUN PREVIEW */
+const savedCode = localStorage.getItem("ablecode-code");
+if (savedCode) code.value = savedCode;
 
 function runPreview() {
-
   try {
-
-    preview.srcdoc =
-      code.value;
-
-    codeStatus.textContent =
-      "Preview updated successfully.";
-
+    preview.srcdoc = code.value;
+    codeStatus.textContent = "Preview updated successfully.";
   } catch (error) {
-
-    codeStatus.textContent =
-      "Preview error: " +
-      error.message;
-
+    codeStatus.textContent = "Preview error: " + error.message;
   }
-
 }
 
+document.getElementById("run-code").addEventListener("click", runPreview);
 
-document
-  .getElementById("run-code")
-  .addEventListener(
-    "click",
-    runPreview
-  );
-
-
-/* COPY CODE */
-
-document
-  .getElementById("copy-code")
-  .addEventListener(
-    "click",
-    async function() {
-
-      try {
-
-        await navigator.clipboard.writeText(
-          code.value
-        );
-
-        codeStatus.textContent =
-          "Code copied to clipboard.";
-
-      } catch (error) {
-
-        codeStatus.textContent =
-          "Unable to copy automatically.";
-
-      }
-
-    }
-  );
-
-
-/* DOWNLOAD CODE */
-
-document
-  .getElementById("download-code")
-  .addEventListener(
-    "click",
-    function() {
-
-      const blob =
-        new Blob(
-          [code.value],
-          { type: "text/html" }
-        );
-
-      const url =
-        URL.createObjectURL(blob);
-
-      const link =
-        document.createElement("a");
-
-      link.href = url;
-      link.download = "accessible-app.html";
-
-      document.body.appendChild(link);
-
-      link.click();
-
-      link.remove();
-
-      URL.revokeObjectURL(url);
-
-      codeStatus.textContent =
-        "Code download created.";
-
-    }
-  );
-
-
-/* AI MESSAGE */
-
-function addAIMessage(
-  title,
-  text,
-  isLoading = false
-) {
-
-  const message =
-    document.createElement("div");
-
-  message.className =
-    "message";
-
-  const heading =
-    document.createElement("strong");
-
-  heading.textContent =
-    title;
-
-  const content =
-    document.createElement("p");
-
-  if (isLoading) {
-    content.innerHTML =
-      '<span class="spinner"></span> ' +
-      text;
-  } else {
-    content.textContent = text;
+document.getElementById("copy-code").addEventListener("click", async function() {
+  try {
+    await navigator.clipboard.writeText(code.value);
+    codeStatus.textContent = "Code copied to clipboard.";
+  } catch (error) {
+    codeStatus.textContent = "Unable to copy automatically.";
   }
+});
+
+document.getElementById("download-code").addEventListener("click", function() {
+  const blob = new Blob([code.value], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "accessible-app.html";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  codeStatus.textContent = "Code download created.";
+});
+
+function addAIMessage(title, text) {
+  const message = document.createElement("div");
+  message.className = "message";
+
+  const heading = document.createElement("strong");
+  heading.textContent = title;
+
+  const content = document.createElement("p");
+  content.textContent = text;
 
   message.appendChild(heading);
   message.appendChild(content);
-
   aiMessages.appendChild(message);
-  
-  // Scroll to bottom
-  aiMessages.scrollTop = aiMessages.scrollHeight;
-
-  return message;
-
 }
 
+function generateAccessibleCode(request) {
+  const clean = request.replace(/[<>]/g, "").trim();
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessible Application</title>
+</head>
+<body>
+  <main>
+    <h1>Accessible Application</h1>
+    <p>${clean}</p>
+    <form>
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" autocomplete="name">
+      <button type="submit">Submit</button>
+      <p role="status" aria-live="polite"></p>
+    </form>
+  </main>
+</body>
+</html>`;
+}
 
-/* CHATGPT CODE GENERATION */
-
-async function generateWithChatGPT(
-  request
-) {
-
-  const request_idea = idea.value.trim();
-
-  if (!request_idea) {
-
-    voiceStatus.textContent =
-      "Please describe your software idea first.";
-
+document.getElementById("generate").addEventListener("click", function() {
+  const request = idea.value.trim();
+  if (!request) {
+    voiceStatus.textContent = "Please describe your software idea first.";
     idea.focus();
-
     return;
-
   }
 
-  const generateBtn = 
-    document.getElementById("generate");
-  generateBtn.disabled = true;
+  code.value = generateAccessibleCode(request);
+  localStorage.setItem("ablecode-code", code.value);
+  runPreview();
+  addAIMessage("AbleCode AI", "Accessible starter code has been generated. You can edit it in Code View.");
+  voiceStatus.textContent = "Accessible code generated.";
+});
 
-  const messageEl = addAIMessage(
-    "AbleCode AI",
-    "Generating accessible code with ChatGPT...",
-    true
-  );
-
-  try {
-
-    const response = await fetch(
-      API_BASE_URL + "/api/generate-code",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          idea: request_idea
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(
-        error.error || 
-        "Failed to generate code"
-      );
-    }
-
-    const data = 
-      await response.json();
-
-    code.value = data.code;
-
-    localStorage.setItem(
-      "ablecode-code",
-      code.value
-    );
-
-    runPreview();
-
-    messageEl.remove();
-
-    addAIMessage(
-      "AbleCode AI",
-      "✓ Accessible code generated successfully! You can edit it in Code View."
-    );
-
-    voiceStatus.textContent =
-      "Code generated from ChatGPT.";
-
-  } catch (error) {
-
-    messageEl.remove();
-
-    addAIMessage(
-      "Error",
-      error.message
-    );
-
-    voiceStatus.textContent =
-      "Error: " + error.message;
-
-  } finally {
-
-    generateBtn.disabled = false;
-
-  }
-
-}
-
-
-document
-  .getElementById("generate")
-  .addEventListener(
-    "click",
-    generateWithChatGPT
-  );
-
-
-/* EXPLAIN CODE WITH CHATGPT */
-
-async function explainCode() {
-
-  const codeToExplain = code.value.trim();
-
-  if (!codeToExplain) {
-
-    voiceStatus.textContent =
-      "Please write or generate code first.";
-
-    showView("code");
-    code.focus();
-
-    return;
-
-  }
-
-  const explainBtn = 
-    document.getElementById("explain");
-  explainBtn.disabled = true;
-
-  const messageEl = addAIMessage(
-    "AbleCode AI",
-    "Analyzing code and accessibility features...",
-    true
-  );
-
-  try {
-
-    const response = await fetch(
-      API_BASE_URL + "/api/explain-code",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          code: codeToExplain
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(
-        error.error || 
-        "Failed to explain code"
-      );
-    }
-
-    const data = 
-      await response.json();
-
-    messageEl.remove();
-
-    addAIMessage(
-      "Code Explanation",
-      data.explanation
-    );
-
-    voiceStatus.textContent =
-      "Code explanation generated.";
-
-  } catch (error) {
-
-    messageEl.remove();
-
-    addAIMessage(
-      "Error",
-      error.message
-    );
-
-    voiceStatus.textContent =
-      "Error: " + error.message;
-
-  } finally {
-
-    explainBtn.disabled = false;
-
-  }
-
-}
-
-
-document
-  .getElementById("explain")
-  .addEventListener(
-    "click",
-    explainCode
-  );
-
-
-/* DICTATION */
+document.getElementById("explain").addEventListener("click", function() {
+  addAIMessage("Accessibility explanation", "The generated code uses semantic HTML, a language declaration, a viewport setting, labels for form controls, keyboard-operable buttons, and a live status region.");
+});
 
 let recognition = null;
 let isDictating = false;
 
-
 function setupSpeechRecognition() {
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
-
-    document
-      .getElementById("start-dictation")
-      .disabled = true;
-
-    voiceStatus.textContent =
-      "Browser speech recognition is unavailable. Use Safari keyboard Dictation.";
-
+    document.getElementById("start-dictation").disabled = true;
+    voiceStatus.textContent = "Browser speech recognition is unavailable. Use Safari keyboard Dictation.";
     return;
-
   }
 
-  recognition =
-    new SpeechRecognition();
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = true;
+  recognition.interimResults = true;
 
-  recognition.lang =
-    "en-US";
+  recognition.onstart = function() {
+    isDictating = true;
+    document.getElementById("start-dictation").setAttribute("aria-pressed", "true");
+    document.getElementById("start-dictation").textContent = "Dictation Running";
+    document.getElementById("stop-dictation").disabled = false;
+    voiceStatus.textContent = "Dictation started. Speak your software idea.";
+  };
 
-  recognition.continuous =
-    true;
+  recognition.onresult = function(event) {
+    let finalText = "";
+    let interimText = "";
 
-  recognition.interimResults =
-    true;
-
-
-  recognition.onstart =
-    function() {
-
-      isDictating = true;
-
-      document
-        .getElementById("start-dictation")
-        .setAttribute(
-          "aria-pressed",
-          "true"
-        );
-
-      document
-        .getElementById("start-dictation")
-        .textContent =
-        "Dictation Running";
-
-      document
-        .getElementById("stop-dictation")
-        .disabled = false;
-
-      voiceStatus.textContent =
-        "Dictation started. Speak your software idea.";
-
-    };
-
-
-  recognition.onresult =
-    function(event) {
-
-      let finalText = "";
-
-      let interimText = "";
-
-      for (
-        let i = event.resultIndex;
-        i < event.results.length;
-        i++
-      ) {
-
-        const transcript =
-          event.results[i][0]
-            .transcript;
-
-        if (
-          event.results[i].isFinal
-        ) {
-
-          finalText +=
-            transcript;
-
-        } else {
-
-          interimText +=
-            transcript;
-
-        }
-
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalText += transcript;
+      } else {
+        interimText += transcript;
       }
+    }
 
+    if (finalText) {
+      const existing = idea.value.trim();
+      idea.value = existing ? existing + " " + finalText : finalText;
+    }
 
-      if (finalText) {
+    voiceStatus.textContent = interimText ? "Listening: " + interimText : "Dictation received.";
+  };
 
-        const existing =
-          idea.value.trim();
+  recognition.onerror = function(event) {
+    voiceStatus.textContent = "Dictation error: " + event.error;
+    stopDictation();
+  };
 
-        idea.value =
-          existing
-            ? existing + " " + finalText
-            : finalText;
-
-      }
-
-
-      voiceStatus.textContent =
-        interimText
-          ? "Listening: " + interimText
-          : "Dictation received.";
-
-    };
-
-
-  recognition.onerror =
-    function(event) {
-
-      voiceStatus.textContent =
-        "Dictation error: " +
-        event.error;
-
-      stopDictation();
-
-    };
-
-
-  recognition.onend =
-    function() {
-
-      isDictating = false;
-
-      document
-        .getElementById("start-dictation")
-        .setAttribute(
-          "aria-pressed",
-          "false"
-        );
-
-      document
-        .getElementById("start-dictation")
-        .textContent =
-        "Start Dictation";
-
-      document
-        .getElementById("stop-dictation")
-        .disabled = true;
-
-    };
-
+  recognition.onend = function() {
+    isDictating = false;
+    document.getElementById("start-dictation").setAttribute("aria-pressed", "false");
+    document.getElementById("start-dictation").textContent = "Start Dictation";
+    document.getElementById("stop-dictation").disabled = true;
+  };
 }
-
 
 function stopDictation() {
-
-  if (recognition) {
-    recognition.stop();
-  }
-
+  if (recognition) recognition.stop();
 }
 
+document.getElementById("start-dictation").addEventListener("click", function() {
+  if (!isDictating) {
+    setupSpeechRecognition();
+    recognition.start();
+  }
+});
 
-document
-  .getElementById("start-dictation")
-  .addEventListener(
-    "click",
-    function() {
+document.getElementById("stop-dictation").addEventListener("click", stopDictation);
 
-      if (!isDictating) {
-        setupSpeechRecognition();
-        recognition.start();
+document.getElementById("debug-run").addEventListener("click", function() {
+  const codeToDebug = code.value;
+
+  try {
+    const errors = [];
+    if (!codeToDebug.includes("lang=")) errors.push("⚠ Missing language attribute on <html> tag");
+    if (!codeToDebug.includes("<title>")) errors.push("⚠ Missing <title> tag");
+    if (!codeToDebug.includes("viewport")) errors.push("⚠ Missing viewport meta tag");
+
+    const inputMatches = codeToDebug.match(/<input[^>]*>/g) || [];
+    inputMatches.forEach(function(input) {
+      if (!input.includes("id") && !input.includes("aria-label")) {
+        errors.push("⚠ Input without id or aria-label: " + input.substring(0, 30) + "...");
       }
+    });
 
+    if (errors.length === 0) {
+      debugOutput.innerHTML = '<p class="success">✓ No accessibility issues detected!</p>';
+    } else {
+      debugOutput.innerHTML = '<p>Found ' + errors.length + ' potential issues:</p><ul>' + errors.map(function(err) { return '<li>' + err + '</li>'; }).join('') + '</ul>';
     }
-  );
+  } catch (error) {
+    debugOutput.textContent = "Debugger error: " + error.message;
+  }
+});
 
-
-document
-  .getElementById("stop-dictation")
-  .addEventListener(
-    "click",
-    stopDictation
-  );
-
-
-/* DEBUGGER */
-
-document
-  .getElementById("debug-run")
-  .addEventListener(
-    "click",
-    function() {
-
-      const codeToDebug = code.value;
-
-      try {
-
-        const errors = [];
-
-        // Basic accessibility checks
-        if (!codeToDebug.includes("lang=")) {
-          errors.push(
-            "⚠ Missing language attribute on <html> tag"
-          );
-        }
-
-        if (!codeToDebug.includes("<title>")) {
-          errors.push(
-            "⚠ Missing <title> tag"
-          );
-        }
-
-        if (!codeToDebug.includes("viewport")) {
-          errors.push(
-            "⚠ Missing viewport meta tag"
-          );
-        }
-
-        const inputMatches = 
-          codeToDebug.match(
-            /<input[^>]*>/g
-          ) || [];
-
-        inputMatches.forEach(function(input) {
-          if (!input.includes("id") && 
-              !input.includes("aria-label")) {
-            errors.push(
-              "⚠ Input without id or aria-label: " + 
-              input.substring(0, 30) + "..."
-            );
-          }
-        });
-
-        if (errors.length === 0) {
-          debugOutput.innerHTML = 
-            '<p class="success">✓ No accessibility issues detected!</p>';
-        } else {
-          debugOutput.innerHTML = 
-            '<p>Found ' + errors.length + 
-            ' potential issues:</p>' +
-            '<ul>' +
-            errors.map(function(err) {
-              return "<li>" + err + "</li>";
-            }).join("") +
-            '</ul>';
-        }
-
-      } catch (error) {
-
-        debugOutput.textContent =
-          "Debugger error: " + 
-          error.message;
-
-      }
-
-    }
-  );
-
-
-document
-  .getElementById("clear-debug")
-  .addEventListener(
-    "click",
-    function() {
-
-      debugOutput.textContent = "";
-
-    }
-  );
-
+document.getElementById("clear-debug").addEventListener("click", function() {
+  debugOutput.textContent = "";
+});
 </script>
 
 </body>
